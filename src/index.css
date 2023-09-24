@@ -53,3 +53,19 @@
 .leaflet-control-attribution {
   font-size: 10px;
 }
+.content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.map-container {
+  margin: 2rem 30%;
+}
+
+.content-container h1 {
+  font-size: 1.5rem;
+}
+.content-container p {
+  font-size: 0.7rem;
+}

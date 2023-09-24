@@ -1,11 +1,9 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Icon } from "leaflet";
 
-function MyIP(props) {
+function MyIP() {
   const [ips, setIps] = useState([]);
   const [isp, setIsp] = useState("");
   const [countryInfo, setCountryInfo] = useState({});
@@ -14,11 +12,8 @@ function MyIP(props) {
 
   useEffect(() => {
     axios
-      .get(
-        `https://geo.ipify.org/api/v2/country,city,vpn?apiKey=${APIKey}&ipAddress=${ips}`
-      )
+      .get(`https://geo.ipify.org/api/v2/country,city,vpn?apiKey=${APIKey}`)
       .then((res) => {
-        console.log(res.data.location);
         setIps(res.data.ip);
         setIsp(res.data.isp);
         setLocation({
@@ -50,7 +45,8 @@ function MyIP(props) {
 
   return (
     <div>
-      <div>
+      <div className="content-container">
+        <h1>Display my IP</h1>
         <p>Your IP: {ips}</p>
         <p>City: {location.city}</p>
         <p>
@@ -58,20 +54,27 @@ function MyIP(props) {
           <img src={countryInfo.flag} alt={countryInfo.name} width="70px" />
         </p>
       </div>
-      <MapContainer
-        center={[location.lat, location.lng]}
-        zoom={12}
-        style={{
-          height: "400px",
-          width: "400px",
-          borderRadius: "15px",
-          border: "2px solid #e74c3c",
-        }}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <Popup>Provider: {isp}</Popup>
-        <Marker position={[location.lat, location.lng]}></Marker>
-      </MapContainer>
+      <div className="map-container">
+        {!location.lat || !location.lng ? (
+          <p>Loading...</p>
+        ) : (
+          <MapContainer
+            center={[location.lat, location.lng]}
+            zoom={12}
+            style={{
+              minHeight: "400px",
+              minWidth: "800px",
+              borderRadius: "15px",
+              border: "2px solid black",
+            }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <Marker position={[location.lat, location.lng]}>
+              <Popup>Provider: {isp}</Popup>
+            </Marker>
+          </MapContainer>
+        )}
+      </div>
     </div>
   );
 }
